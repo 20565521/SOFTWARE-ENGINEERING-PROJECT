@@ -1,0 +1,22 @@
+name: Build and run expense_tracker
+
+on:
+  push: {}
+  pull_request: {}
+
+jobs:
+  build-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build-essential
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Build
+        run: g++ expense_tracker.cpp -O2 -std=c++17 -o expense_tracker
+
+      - name: Run (non-interactive)
+        # Redirect stdin from /dev/null to avoid blocking if program expects input
+        run: timeout 10s ./expense_tracker < /dev/null || true
